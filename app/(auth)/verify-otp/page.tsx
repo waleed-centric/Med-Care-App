@@ -196,20 +196,9 @@ function VerifyOtpInner() {
 				</div>
 
 				{/* Background Patterns */}
-				<Image
-					src="/images/Group 2.png"
-					alt="pattern"
-					width={240}
-					height={240}
-					className="absolute -right-10 bottom-0 opacity-40 pointer-events-none"
-				/>
-				<Image
-					src="/images/Group 2.png"
-					alt="pattern"
-					width={200}
-					height={200}
-					className="absolute right-10 -top-10 opacity-40 rotate-180 pointer-events-none"
-				/>
+				<div className="absolute left-0 -rotate-90 top-0 h-full w-full pointer-events-none overflow-hidden rounded-l-[3rem]">
+					<Image src="/images/Group 2.png" alt="" fill className="object-cover object-left" />
+				</div>
 			</div>
 		</div>
 	);

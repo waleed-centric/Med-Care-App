@@ -137,7 +137,9 @@ function ForgotPasswordInner() {
                     </div>
 
                     {/* Decorative Background */}
-                    <div className="pointer-events-none absolute inset-y-0 right-0 w-[500px] bg-[url('/images/right_splash.svg')] bg-no-repeat bg-bottom-right bg-contain opacity-80" />
+                    <div className="absolute left-0 -rotate-90 top-0 h-full w-full pointer-events-none overflow-hidden rounded-l-[40px]">
+                        <Image src="/images/Group 2.png" alt="" fill className="object-cover object-left" />
+                    </div>
                 </div>
             </div>
         </div>

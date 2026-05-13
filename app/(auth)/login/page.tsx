@@ -199,7 +199,7 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
-        <div className="relative bg-white rounded-l-4xl px-8 md:px-14 py-10 md:py-16 shadow-sm flex flex-col justify-center h-full">
+        <div className="relative bg-white rounded-l-4xl px-8 md:px-14 py-10 md:py-16 shadow-sm flex flex-col justify-center h-full overflow-hidden">
           <div className="flex items-start gap-4 mb-8">
             <Image src="/images/logo.svg" alt="Excel Connect" width={220} height={80} className="object-contain" />
           </div>
@@ -214,8 +214,9 @@ export default function LoginPage() {
           <div className="relative mt-12 flex-1 min-h-[300px]">
             <Image src="/images/image 99.png" alt="Stethoscope" fill className="object-contain" priority />
           </div>
-          <Image src="/images/Group 2.png" alt="" width={160} height={160} className="absolute right-0 bottom-0 opacity-20 pointer-events-none" />
-          <Image src="/images/Group 2.png" alt="" width={120} height={120} className="absolute right-10 top-10 opacity-20 rotate-180 pointer-events-none" />
+          <div className="absolute left-0 -rotate-90 top-0 h-full  w-full  pointer-events-none overflow-hidden rounded-l-4xl">
+            <Image src="/images/Group 2.png" alt="" fill className="object-cover object-left" />
+          </div>
         </div>
       </div>
       <Footer />
