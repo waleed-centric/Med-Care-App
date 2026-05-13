@@ -90,23 +90,19 @@ function ForgotPasswordInner() {
                                     className="mt-6 h-11 w-full rounded-xl bg-[#9AC63F] text-white font-semibold hover:bg-[#86b132]"
                                     disabled={loading}
                                 >
-                                    {loading ? "Sending..." : "Send Reset Link"}
+                                    {loading ? "Sending..." : "Send"}
                                 </Button>
-                                <Button
+                                {/* <Button
                                     variant="outline"
-                                    onClick={() => router.push("/")}
+                                    onClick={() => router.push("/login")}
                                     className="mt-3 h-11 w-full rounded-xl border-[#E5E7EB] text-[#111827] hover:bg-[#F9FAFB]"
                                 >
                                     <ArrowLeft className="mr-2 h-4 w-4" /> Back to Login
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                         <div className="mt-8 px-8 pb-8">
-                            <div className="flex items-center justify-center gap-2 text-xs text-[#9CA3AF]">
-                                <span>Secure reset via email</span>
-                                <span>•</span>
-                                <span>No spam, promise</span>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>

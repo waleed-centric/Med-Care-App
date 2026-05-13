@@ -1,6 +1,5 @@
-"use client";
-import DoctorLogin from "./(auth)/doctor/login/page";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <DoctorLogin />;
+  redirect("/login");
 } 

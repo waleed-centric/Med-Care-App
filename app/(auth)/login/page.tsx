@@ -17,18 +17,16 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lock, User, Eye, EyeOff, Loader, ArrowRight } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = loginFormSchema;
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function DoctorLogin() {
+export default function LoginPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [phase, setPhase] = useState<"splash" | "transition" | "ready">("splash");
-  const [role, setRole] = useState<"doctor" | "patient" | "lpc">("doctor");
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -46,33 +44,28 @@ export default function DoctorLogin() {
     try {
       const { user } = await login(data);
 
+      const role = (user?.role ?? "").toLowerCase();
       if (role === "doctor") {
-        if (user.role === "doctor" && user?.status != "approved") {
-          router.push("/pending-approval");
-        } else if (user.role === "doctor" && user?.status === "approved") {
-          router.push("/doctor/messages");
-        } else {
-          setError("Unauthorized access. Please log in as a doctor.");
-          logout(false);
-        }
-      } else if (role === "lpc") {
-        if (user.role === "lpc") {
-          router.push("/lpc/dashboard");
-        } else {
-          setError("Unauthorized access. Please log in as an LPC.");
-          logout(false);
-        }
-      } else {
-        if (user.role === "patient") {
-          router.push("/");
-        } else {
-          setError("Unauthorized access. Please log in as a patient.");
-          logout(false);
-        }
+        if (user?.status !== "approved") router.push("/pending-approval");
+        else router.push("/doctor/dashboard");
+        return;
       }
+      if (role === "patient") {
+        router.push("/patient/schedule");
+        return;
+      }
+      if (role === "lpc") {
+        router.push("/lpc/dashboard");
+        return;
+      }
+      if (role === "marketer") {
+        router.push("/marketer/client");
+        return;
+      }
+      setError("Unauthorized access.");
+      logout(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err);
       const status = err?.response?.status;
       const apiMessage = err?.response?.data?.error || err?.response?.data?.message;
       
@@ -86,10 +79,6 @@ export default function DoctorLogin() {
       }
     }
   };
-
-  useEffect(() => {
-    setError("");
-  }, [role]);
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("transition"), 1500);
@@ -119,36 +108,10 @@ export default function DoctorLogin() {
         <div className="flex items-center justify-center py-10 md:py-14">
           <Card className="w-[360px] sm:w-[420px] shadow-xl rounded-2xl border border-gray-200">
             <CardHeader className="pb-2">
-              <Tabs 
-                defaultValue="doctor" 
-                onValueChange={(v) => {
-                  setRole(v as "doctor" | "patient" | "lpc");
-                  setError("");
-                }}
-              >
-                <TabsList className="w-full h-10 bg-gray-100 rounded-lg">
-                  <TabsTrigger
-                    value="patient"
-                    className="w-1/3 text-gray-500 relative data-[state=active]:text-gray-900 data-[state=active]:font-extrabold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-1/2 data-[state=active]:after:-translate-x-1/2 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:w-8 data-[state=active]:after:bg-secondary data-[state=active]:after:rounded-full"
-                  >
-                    Client
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="doctor"
-                    className="w-1/3 relative data-[state=active]:text-gray-900 data-[state=active]:font-extrabold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-1/2 data-[state=active]:after:-translate-x-1/2 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:w-8 data-[state=active]:after:bg-secondary data-[state=active]:after:rounded-full"
-                  >
-                    Doctor
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="lpc"
-                    className="w-1/3 relative data-[state=active]:text-gray-900 data-[state=active]:font-extrabold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-1/2 data-[state=active]:after:-translate-x-1/2 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:w-8 data-[state=active]:after:bg-secondary data-[state=active]:after:rounded-full"
-                  >
-                    LPC
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="doctor" />
-                <TabsContent value="lpc" />
-              </Tabs>
+              <div className="text-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Sign in</h2>
+                <p className="text-gray-500 text-sm">Welcome back! Please enter your details.</p>
+              </div>
             </CardHeader>
             <CardContent>
               {error && (
@@ -156,7 +119,6 @@ export default function DoctorLogin() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <p className="font-bold text-2xl mb-4">Sign in</p>
               <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
@@ -231,15 +193,7 @@ export default function DoctorLogin() {
                     </span>
                   )}
                 </Button>
-                <div className="rounded-xl bg-[#F4F4F5] px-4 py-4 text-center text-sm text-[#6B7280]">
-                  Don’t have an account?{" "}
-                  <Link
-                    href={role === "patient" ? "/register" : role === "lpc" ? "/lpc/register" : "/doctor/register"}
-                    className="font-semibold text-[#F97316] hover:text-[#ef6b0e]"
-                  >
-                    {role === "patient" ? "Register as a Patient" : role === "lpc" ? "Register as a LPC" : "Register as a Doctor"}
-                  </Link>
-                </div>
+                
               </form>
             </Form>
           </CardContent>

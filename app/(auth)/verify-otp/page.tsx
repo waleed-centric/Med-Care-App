@@ -18,7 +18,6 @@ function VerifyOtpInner() {
 	const router = useRouter();
 	const search = useSearchParams();
 	const email = search.get("email") || "";
-	const tokenFromUrl = search.get("token") || "";
 	const [digits, setDigits] = useState<string[]>(["", "", "", ""]);
 	const [loading, setLoading] = useState(false);
 
@@ -87,13 +86,12 @@ function VerifyOtpInner() {
 		setLoading(true);
 		try {
 			const res: any = await verifyOtp({ email, code });
-			console.log(res)
 			if (res?.success) {
                 Cookies.remove("token");
                 Cookies.remove("user");
                 if (typeof window !== "undefined") {
                     localStorage.clear();
-                    window.location.href = "/";
+                    window.location.href = "/login";
                 }
 			}
 		} finally {
@@ -107,74 +105,111 @@ function VerifyOtpInner() {
 	};
 
 	return (
-		<div className="min-h-screen bg-[#F5F5F5] flex">
-			<div className="flex-1 flex items-center justify-center p-6">
-				<div className="w-full max-w-sm bg-white rounded-2xl border border-[#E5E7EB] p-6 shadow-sm">
-					<div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#9AC63F] text-white mx-auto mb-4">
-						<span>⎈</span>
-					</div>
-					<div className="text-center mb-6">
-						<div className="text-2xl font-bold text-[#111827]">
+		<div className="min-h-screen bg-[#F9FAFB] flex flex-col md:flex-row">
+			{/* Left Side */}
+			<div className="flex-1 flex items-center justify-center py-6">
+				<div className="w-full max-w-[400px] bg-[#F3F4F6] rounded-[2rem] py-4 shadow-sm border border-gray-100">
+					<div className="bg-white rounded-3xl py-8 sm:p-10 shadow-sm text-center relative">
+						{/* Icon */}
+						<div className="mx-auto flex items-center justify-center h-12 w-12 rounded-xl bg-[#9AC63F] text-white mb-6">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={1.5}
+								stroke="currentColor"
+								className="w-6 h-6"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"
+								/>
+							</svg>
+						</div>
+
+						{/* Texts */}
+						<h2 className="text-2xl font-bold text-[#111827] mb-2">
 							Verify Your Code
-						</div>
-						<div className="text-sm text-[#6B7280]">
+						</h2>
+						<p className="text-sm text-[#9CA3AF] mb-8">
 							Enter the code we sent to your email.
+						</p>
+
+						{/* Inputs */}
+						<div className="flex items-center justify-center gap-3 mb-8">
+							{digits.map((d, i) => (
+								<input
+									autoComplete="off"
+									key={i}
+									ref={inputs[i]}
+									value={d}
+									onChange={(e) => handleChange(i, e.target.value)}
+									onPaste={handlePaste}
+									onKeyDown={(e) => handleKeyDown(i, e)}
+									className="w-[60px] h-[60px] rounded-xl bg-[#F3F4F6] focus:bg-white focus:ring-2 focus:ring-[#f97316] outline-none text-center text-xl font-semibold text-gray-800 transition-all  border-[0.1 px] border-transparent focus:border-[#f97316]"
+									inputMode="numeric"
+								/>
+							))}
 						</div>
+
+						{/* Links */}
+						<div className="flex items-center justify-between text-sm mb-8 font-medium">
+							<button onClick={() => router.back()} className="text-[#9CA3AF] hover:text-gray-700 transition-colors">
+								Back
+							</button>
+							<button onClick={resend} className="text-[#f97316] underline underline-offset-4 hover:text-orange-600 transition-colors">
+								Don’t receive your code
+							</button>
+						</div>
+
+						{/* Button */}
+						<Button
+							onClick={verify}
+							className="w-full h-12 bg-[#9AC63F] hover:bg-[#86b132] text-white rounded-xl font-semibold text-base transition-colors"
+							disabled={loading}
+						>
+							{loading ? "Verifying..." : "Verify"}
+						</Button>
 					</div>
-					<div className="grid grid-cols-4 gap-3 mb-4">
-						{digits.map((d, i) => (
-							<input
-								autoComplete="off"
-								key={i}
-								ref={inputs[i]}
-								value={d}
-								onChange={(e) => handleChange(i, e.target.value)}
-                                onPaste={handlePaste}
-								onKeyDown={(e) => handleKeyDown(i, e)}
-								className="h-14 rounded-xl border border-[#E5E7EB] text-center text-xl"
-								inputMode="numeric"
-							/>
-						))}
-					</div>
-					<div className="flex items-center justify-between text-sm mb-4">
-						<button onClick={() => router.back()} className="text-[#6B7280]">
-							Back
-						</button>
-						<button onClick={resend} className="text-[#f97316]">
-							Don’t receive your code
-						</button>
-					</div>
-					<Button
-						onClick={verify}
-						className="w-full bg-[#9AC63F] hover:bg-[#86b132]"
-						disabled={loading}
-					>
-						{loading ? "Verifying..." : "Verify"}
-					</Button>
 				</div>
 			</div>
-			<div className="hidden lg:flex lg:w-1/2 items-center justify-center p-10">
-				<div className="w-full max-w-lg">
-					<div className="flex items-center gap-3 mb-6">
-						<Image
-							src="/images/logo.svg"
-							alt="Excel Connect"
-							width={40}
-							height={40}
-						/>
-						<div className="text-2xl font-bold">
-							<span className="text-[#9AC63F]">EXCEL</span>
-							<span className="text-[#111827]">CONNECT</span>
-						</div>
+
+			{/* Right Side */}
+			<div className="hidden md:flex relative md:w-1/2 bg-white rounded-l-[3rem] px-8 py-10 shadow-sm flex-col justify-center h-full min-h-screen overflow-hidden">
+				<div className="absolute top-10 left-10 z-10">
+					<div className="text-3xl font-bold tracking-tight">
+						<span className="text-[#9AC63F]">Medcare</span>
+						<span className="text-[#f97316]">Track</span>
 					</div>
+				</div>
+
+				<div className="relative flex-1 flex items-center justify-center min-h-[400px] z-10 mt-16">
 					<Image
 						src="/images/image 99.png"
-						alt="brand"
-						width={800}
-						height={600}
-						className="w-full h-auto"
+						alt="Stethoscope"
+						width={500}
+						height={500}
+						className="object-contain"
+						priority
 					/>
 				</div>
+
+				{/* Background Patterns */}
+				<Image
+					src="/images/Group 2.png"
+					alt="pattern"
+					width={240}
+					height={240}
+					className="absolute -right-10 bottom-0 opacity-40 pointer-events-none"
+				/>
+				<Image
+					src="/images/Group 2.png"
+					alt="pattern"
+					width={200}
+					height={200}
+					className="absolute right-10 -top-10 opacity-40 rotate-180 pointer-events-none"
+				/>
 			</div>
 		</div>
 	);

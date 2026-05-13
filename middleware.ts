@@ -38,7 +38,7 @@ export function middleware(req: NextRequest) {
 
   if (!token) {
     if (publicPaths.includes(pathname)) return NextResponse.next();
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   // Decode JWT to get role
@@ -78,7 +78,7 @@ export function middleware(req: NextRequest) {
   if (!role) {
       // Invalid session
       if (publicPaths.includes(pathname)) return NextResponse.next();
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/login", req.url));
   }
 
   // Redirect authenticated users away from auth pages

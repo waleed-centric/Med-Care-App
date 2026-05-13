@@ -8,22 +8,21 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, ArrowLeft, AlertCircle } from "lucide-react";
 import { sendResetPassword } from "@/hooks/auth";
 export default function CreatePasswordPage() {
-	return (
-		<Suspense
-			fallback={
-				<div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center" />
-			}
-		>
-			<CreatePasswordInner />
-		</Suspense>
-	);
-} 
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center" />
+            }
+        >
+            <CreatePasswordInner />
+        </Suspense>
+    );
+}
 
 function CreatePasswordInner() {
-	const router = useRouter();
-	const search = useSearchParams();
+    const router = useRouter();
+    const search = useSearchParams();
     const token = search.get("resetToken") || search.get("token") || "";
-    const email = search.get("email") || "";
     const [newPassword, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
     const [show, setShow] = useState(false);
@@ -47,7 +46,7 @@ function CreatePasswordInner() {
         setLoading(true);
         try {
             await sendResetPassword({ newPassword, resetToken: token });
-            router.push("/");
+            router.push("/login");
         } finally {
             setLoading(false);
         }
@@ -124,23 +123,23 @@ function CreatePasswordInner() {
                                     className="h-11 w-full rounded-xl bg-[#9AC63F] text-white font-semibold hover:bg-[#86b132]"
                                     disabled={loading || newPassword.length < 6 || newPassword !== confirm}
                                 >
-                                    {loading ? "Updating..." : "Reset Password"}
+                                    {loading ? "Updating..." : "Send"}
                                 </Button>
-                                <Button
+                                {/* <Button
                                     variant="outline"
-                                    onClick={() => router.push("/")}
+                                    onClick={() => router.push("/login")}
                                     className="h-11 w-full rounded-xl border-[#E5E7EB] text-[#111827] hover:bg-[#F9FAFB]"
                                 >
                                     <ArrowLeft className="mr-2 h-4 w-4" /> Back to Login
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                         <div className="mt-8 px-8 pb-8">
-                            <div className="flex items-center justify-center gap-2 text-xs text-[#9CA3AF]">
+                            {/* <div className="flex items-center justify-center gap-2 text-xs text-[#9CA3AF]">
                                 <span>Use a strong password</span>
                                 <span>•</span>
                                 <span>Keep it private</span>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
