@@ -1,0 +1,62 @@
+/* Customize the toolbar */
+.fc-toolbar {
+  background-color: #f4f4f4;
+  padding: 10px;
+}
+
+/* Customize events */
+.fc-event {
+  background-color: #fbeade;
+  border: none;
+  color: white;
+  font-size: 14px;
+  border-left: 4px solid #ff9e58;
+  padding-left: 5px;
+  color: #ff9e58;
+  cursor: pointer;
+  transition: background-color 0.3s ease
+}
+
+.fc-header-toolbar {
+  background-color: transparent !important;
+}
+
+.fc-toolbar-title {
+  font-size: 18px !important;
+  font-weight: 700;
+}
+
+.fc-col-header {
+  background-color: #f4f4f4 !important;
+}
+
+.fc-day-other {
+  background: repeating-linear-gradient(
+    135deg,
+    #f9f9f9,
+    #f9f9f9 3px,
+    #ebebeb 3px,
+    #ebebeb 6px
+  ) !important;
+}
+
+.fc-button-primary {
+  background-color: #fafbfd !important;
+  color: #1B1B1B !important;
+  padding: 3px 10px !important;
+  font-size: small !important;
+  outline: none !important;
+  border: 0.6px solid #E8E8E8 !important;
+  box-shadow: none !important;
+}
+
+.fc-button-primary:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.fc-button-active {
+  background-color: hsl(var(--secondary)) !important;
+  color: white !important;
+
+}
